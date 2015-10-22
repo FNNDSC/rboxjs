@@ -1,0 +1,52 @@
+*{
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/*================================================= RENDERER DIV ================================================== */
+div.view-renders{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  border: 1px solid #DDE8BB;
+  background-color: black;
+  font-family: 'Droid Sans', sans-serif;
+}
+
+/*================================================= single renderer ================================================== */
+.view-render{
+  border: 1px solid #DDE8BB;
+  position: absolute;
+  background-color: black;
+}
+
+/*================================================= patient info in renderer ================================================== */
+.view-render-info{
+  position: absolute;
+  z-index: 90;
+  color: #DDE8BB;
+  font-size: 11px;
+  background-color: black;
+}
+.view-render-info-topleft{
+  top: 2px;
+  left: 10px;
+}
+.view-render-info-topright{
+  top: 2px;
+  right: 10px;
+  text-align:right;
+}
+.view-render-info-bottomright{
+  bottom: 2px;
+  right: 10px;
+  text-align:right;
+}
+.view-render-info-bottomleft{
+  bottom: 2px;
+  left: 10px;
+}
