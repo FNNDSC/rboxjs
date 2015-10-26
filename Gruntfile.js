@@ -33,8 +33,8 @@ module.exports = function(grunt) {
         eqnull: true,
         browser: true,
         globals: {
-          jQuery: true, $: true, viewerjs: true, X: true, dicomParser: true, console: true,
-          alert: true, require: true, describe: true, it: true, expect: true, beforeEach: true,
+          jQuery: true, $: true, X: true, dicomParser: true, console: true, alert: true,
+          require: true, describe: true, it: true, expect: true, beforeEach: true,
           afterEach: true, define: true
         }
       },
