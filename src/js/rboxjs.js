@@ -25,8 +25,6 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
       this.version = 0.0;
       // renderers box's container's ID
       this.contId = containerId;
-      // parent container's ID
-      this.parentContId = "";
       // jQuery object for the box's div element (box container)
       this.jqRBox = null;
       // list of currently rendered 2D renderer objects
@@ -47,7 +45,6 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
      */
      rboxjs.RenderersBox.prototype.init = function() {
        var self = this;
-       var pContId;
        var jqRBox;
 
        // return if renderers box already initialized
@@ -57,10 +54,9 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
 
        // set jQuery obj for the  renderers box
        this.jqRBox = jqRBox = $('#' + this.contId);
-       // set parent container's id
-       this.parentContId = pContId = jqRBox.parent().attr('id');
+
        // add the appropriate classes
-       jqRBox.addClass("view-renders " + pContId + "-sortable");
+       jqRBox.addClass("view-renders");
 
        // jQuery UI options object for sortable elems
        // ui-sortable CSS class is by default added to the containing elem
@@ -68,8 +64,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
        var sort_opts = {
          cursor: 'move',
          distance: '60', // required moving distance before the displacement is taken into account
-         containment: '#' + pContId, // CSS selector within which elem displacement is restricted
-         connectWith: '.' + pContId + '-sortable', // CSS selector representing the elems in which we can insert these elems.
+         containment: jqRBox.parent(), // within which elem displacement is restricted
          dropOnEmpty: true, // allows depositing items into an empty list
 
          //event handlers
@@ -149,15 +144,17 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
    /**
     * Set a complementary jQuery UI sortable element which the moving helper can be visually appended to.
     *
-    * @param {Object} jQery UI event object.
-    * @param {Object} jQery UI ui object.
+    * @param {String} complementary element's id.
     */
     rboxjs.RenderersBox.prototype.setComplementarySortableElem = function(csId) {
 
-      if (this.parentContId === $('#' + csId).parent().attr('id')) {
+      if (this.jqRBox.parent()[0] === $('#' + csId).parent()[0]) {
 
         // the moving helper element can be appended to this element
         this.jqRBox.sortable( "option", "appendTo", '#' + csId);
+        // connect with this sortable element
+        this.jqRBox.sortable( "option", "connectWith", '#' + csId);
+
       } else {
         console.error("The complementary jQuery UI sortable element must have the same parent container as this renderers box");
       }
