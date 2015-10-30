@@ -7,11 +7,7 @@
 /*================================================= RENDERER DIV ================================================== */
 div.view-renders{
   position: absolute;
-  bottom: 0;
-  right: 0;
   margin: 0;
-  height: 100%;
-  width: 100%;
   border: 1px solid #DDE8BB;
   background-color: black;
   font-family: 'Droid Sans', sans-serif;

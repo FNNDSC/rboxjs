@@ -30,9 +30,18 @@ require(['rboxjs', 'fmjs'], function(rbox, fm) {
   var CLIENT_ID = '1050768372633-ap5v43nedv10gagid9l70a2vae8p9nah.apps.googleusercontent.com';
   var driveFm = new fm.GDriveFileManager(CLIENT_ID);
 
-  // Create a renderers box. The second parameter (file manager is optional and only required
-  // if files are going to be loaded from GDrive)
-  var rBox = new rbox.RenderersBox('rboxcontainer', driveFm);
+  // renderers box options object
+  var options = {
+    contId: 'rboxcontainer',
+    position: {
+      top: '50px',
+      left: '10px'
+    }
+  };
+
+  // Create a renderers box. The second parameter (a file manager) is optional and only required
+  // if files are going to be loaded from GDrive
+  var rBox = new rbox.RenderersBox(options, driveFm);
   rBox.init();
 
   // Image file object

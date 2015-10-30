@@ -13,18 +13,24 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
    var rboxjs = rboxjs || {};
 
    /**
-    * Class implementing the renderers' box
+    * Class implementing the renderers box
     *
     * @constructor
-    * @param {String} HTML container's id.
+    * @param {Object} renderers box's options with properties: contId, position.
     * @param {Object} optional file manager object to enable reading of files from the cloud or HTML5
     * sandboxed filesystem.
     */
-    rboxjs.RenderersBox = function(containerId, fileManager) {
+    rboxjs.RenderersBox = function(options, fileManager) {
 
       this.version = 0.0;
       // renderers box's container's ID
-      this.contId = containerId;
+      this.contId = options.contId;
+      // renderers box's css position object with possible properties top, bottom, left, right
+      if (options.position) {
+        this.position = options.position;
+      } else {
+        this.position = {};
+      }
       // jQuery object for the box's div element (box container)
       this.jqRBox = null;
       // list of currently rendered 2D renderer objects
@@ -84,7 +90,54 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
 
       // make the renderers box a jQuery UI's sortable element
       jqRBox.sortable(sort_opts);
+
+      this.setPosition(this.position);
     };
+
+    /**
+     * Set a new css position for the renderers box  .
+     *
+     * @param {Object} css position object with possible properties: "top", "bottom", "left" and "right".
+     */
+     rboxjs.RenderersBox.prototype.setPosition = function(pos) {
+       var jqRBox = this.jqRBox;
+       var t = "", r = "", b = "", l = "";
+
+       if (pos) {
+
+         if (pos.top) {
+           this.position.top = pos.top;
+           jqRBox.css({ top: pos.top });
+           t = ' - ' + pos.top;
+         }
+
+         if (pos.right) {
+           this.position.right = pos.right;
+           jqRBox.css({ right: pos.right });
+           r = ' - ' + pos.right;
+         }
+
+         if (pos.bottom) {
+           this.position.bottom = pos.bottom;
+           jqRBox.css({ bottom: pos.bottom });
+           b = ' - ' + pos.bottom;
+         }
+
+         if (pos.left) {
+           this.position.left = pos.left;
+           jqRBox.css({ left: pos.left });
+           l = ' - ' + pos.left;
+         }
+
+         if (t || b) {
+           jqRBox.css({ height: 'calc(100%' + t + b + ')' });
+         }
+
+         if (r || l) {
+           jqRBox.css({ width: 'calc(100%' + r + l + ')' });
+         }
+       }
+     };
 
     /**
      * This method creates and returns a new visual element that will be displayed instead of a renderer
