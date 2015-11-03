@@ -812,6 +812,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
      rboxjs.RenderersBox.imgType = function(file) {
       var ext = {};
       var type;
+      var name = file.name;
 
       // dicom extensions
       ext.DICOM = ['.dcm', '.ima', '.DCM', '.IMA'];
@@ -828,19 +829,19 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
       // json extensions
       ext.JSON = ['.json'];
 
-      if (util.strEndsWith(file.name, ext.DICOM)) {
+      if ((name.indexOf('.') === -1) || util.strEndsWith(name, ext.DICOM)) {
         type = 'dicom';
-      } else if (util.strEndsWith(file.name, ext.DICOMZIP)) {
+      } else if (util.strEndsWith(name, ext.DICOMZIP)) {
         type = 'dicomzip';
-      } else if (util.strEndsWith(file.name, ext.VOL)) {
+      } else if (util.strEndsWith(name, ext.VOL)) {
         type = 'vol';
-      } else if (util.strEndsWith(file.name, ext.FIBERS)) {
+      } else if (util.strEndsWith(name, ext.FIBERS)) {
         type = 'fibers';
-      } else if (util.strEndsWith(file.name, ext.MESH)) {
+      } else if (util.strEndsWith(name, ext.MESH)) {
         type = 'mesh';
-      } else if (util.strEndsWith(file.name, ext.THUMBNAIL)) {
+      } else if (util.strEndsWith(name, ext.THUMBNAIL)) {
         type = 'thumbnail';
-      } else if (util.strEndsWith(file.name, ext.JSON)) {
+      } else if (util.strEndsWith(name, ext.JSON)) {
         type = 'json';
       } else {
         type = 'unsupported';
