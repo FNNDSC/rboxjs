@@ -829,7 +829,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
       // json extensions
       ext.JSON = ['.json'];
 
-      if ((name.indexOf('.') === -1) || util.strEndsWith(name, ext.DICOM)) {
+      if ( util.strEndsWith(name, ext.DICOM) || (/^\d+$/.test(name.split('.').pop())) ) {
         type = 'dicom';
       } else if (util.strEndsWith(name, ext.DICOMZIP)) {
         type = 'dicomzip';
