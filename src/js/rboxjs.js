@@ -199,7 +199,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
     *
     * @param {String} css selector indicating the complementary sortable elements.
     */
-    rboxjs.RenderersBox.prototype.setComplementarySortableElem = function(cssSelector) {
+    rboxjs.RenderersBox.prototype.setComplementarySortableElems = function(cssSelector) {
 
       // the moving helper element can be appended to these elements
       this.jqRBox.sortable( "option", "appendTo", cssSelector);
