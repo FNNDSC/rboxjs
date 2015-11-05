@@ -195,22 +195,17 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
     };
 
    /**
-    * Set a complementary jQuery UI sortable element which the moving helper can be visually appended to.
+    * Set complementary jQuery UI sortable elements which the moving helper can be visually appended to.
     *
-    * @param {String} complementary element's id.
+    * @param {String} css selector indicating the complementary sortable elements.
     */
-    rboxjs.RenderersBox.prototype.setComplementarySortableElem = function(csId) {
+    rboxjs.RenderersBox.prototype.setComplementarySortableElem = function(cssSelector) {
 
-      if (this.jqRBox.parent()[0] === $('#' + csId).parent()[0]) {
+      // the moving helper element can be appended to these elements
+      this.jqRBox.sortable( "option", "appendTo", cssSelector);
 
-        // the moving helper element can be appended to this element
-        this.jqRBox.sortable( "option", "appendTo", '#' + csId);
-        // connect with this sortable element
-        this.jqRBox.sortable( "option", "connectWith", '#' + csId);
-
-      } else {
-        console.error("The complementary jQuery UI sortable element must have the same parent container as this renderers box");
-      }
+      // connect with these sortable elements
+      this.jqRBox.sortable( "option", "connectWith", cssSelector);
     };
 
     /**
