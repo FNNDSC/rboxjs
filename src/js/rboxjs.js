@@ -817,7 +817,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
       // dicom extensions
       ext.DICOM = ['.dcm', '.ima', '.DCM', '.IMA'];
       // zipped dicom extensions
-      ext.DICOMZIP = ['.dcm.zip', '.DCM.zip'];
+      ext.DICOMZIP = ['.dcm.zip', '.DCM.zip', '.ima.zip', '.IMA.zip'];
       // volume extensions
       ext.VOL = ['.mgh', '.mgz', '.nrrd', '.nii', '.nii.gz'];
       // fibers extension is .trk
@@ -829,20 +829,39 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
       // json extensions
       ext.JSON = ['.json'];
 
+      // here we assume that DICOM file names with no extension only contain digits after the last dot
+
       if ( util.strEndsWith(name, ext.DICOM) || (/^\d+$/.test(name.split('.').pop())) ) {
         type = 'dicom';
-      } else if (util.strEndsWith(name, ext.DICOMZIP)) {
+
+      } else if (util.strEndsWith(name, ['.zip'])) {
         type = 'dicomzip';
+
+        if (!util.strEndsWith(name, ext.DICOMZIP)) {
+          // check if the zipping might have been performed on a DICOM file with no extension in its name
+          var nameArr = name.split('.');
+          nameArr.pop();
+
+          if (!(/^\d+$/.test(nameArr.pop()))) {
+            type = 'unsupported';
+          }
+        }
+
       } else if (util.strEndsWith(name, ext.VOL)) {
         type = 'vol';
+
       } else if (util.strEndsWith(name, ext.FIBERS)) {
         type = 'fibers';
+
       } else if (util.strEndsWith(name, ext.MESH)) {
         type = 'mesh';
+
       } else if (util.strEndsWith(name, ext.THUMBNAIL)) {
         type = 'thumbnail';
+
       } else if (util.strEndsWith(name, ext.JSON)) {
         type = 'json';
+
       } else {
         type = 'unsupported';
       }
