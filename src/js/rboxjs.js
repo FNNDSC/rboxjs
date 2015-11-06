@@ -69,6 +69,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
        // an elem being moved is assigned the ui-sortable-helper class
        var sort_opts = {
          cursor: 'move',
+         cursorAt: { left: 20, top: 20 },
          distance: '60', // required moving distance before the displacement is taken into account
          containment: jqRBox.parent(), // within which elem displacement is restricted
          dropOnEmpty: true, // allows depositing items into an empty list
