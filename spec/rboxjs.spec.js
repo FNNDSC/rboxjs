@@ -7,13 +7,21 @@ define(['rboxjs'], function(rboxjs) {
 
   describe('rboxjs', function() {
     var rBox;
+    // renderers box options object
+    var options = {
+      contId: 'rboxcontainer',
+      position: {
+        top: '50px',
+        left: '10px'
+      }
+    };
 
     // Append container div
     $(document.body).append('<div id="rboxcontainer"></div>');
 
 
     beforeEach(function() {
-      rBox = new rboxjs.RenderersBox('rboxcontainer');
+      rBox = new rboxjs.RenderersBox(options);
       rBox.init();
     });
 
