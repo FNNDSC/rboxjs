@@ -827,19 +827,22 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
 
       // here we assume that DICOM file names with no extension only contain digits after the last dot
 
-      if ( util.strEndsWith(name, ext.DICOM) || (/^\d+$/.test(name.split('.').pop())) ) {
+      if ( (name.indexOf('.')===-1) || util.strEndsWith(name, ext.DICOM) || (/^\d+$/.test(name.split('.').pop())) ) {
         type = 'dicom';
 
       } else if (util.strEndsWith(name, ['.zip'])) {
         type = 'dicomzip';
 
         if (!util.strEndsWith(name, ext.DICOMZIP)) {
-          // check if the zipping might have been performed on a DICOM file with no extension in its name
-          var nameArr = name.split('.');
-          nameArr.pop();
 
-          if (!(/^\d+$/.test(nameArr.pop()))) {
-            type = 'unsupported';
+          // check if the zipping might have been performed on a DICOM file with no extension in its name
+          if (name.slice(0, name.lastIndexOf('.')).indexOf('.')!==-1) {
+            var nameArr = name.split('.');
+            nameArr.pop();
+
+            if (!(/^\d+$/.test(nameArr.pop()))) {
+              type = 'unsupported';
+            }
           }
         }
 
