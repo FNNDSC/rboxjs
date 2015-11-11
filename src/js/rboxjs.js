@@ -70,7 +70,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
        var sort_opts = {
          cursor: 'move',
          cursorAt: { left: 20, top: 20 },
-         distance: '60', // required moving distance before the displacement is taken into account
+         handle: '.view-render-titlebar',
          containment: jqRBox.parent(), // within which elem displacement is restricted
          dropOnEmpty: true, // allows depositing items into an empty list
 
@@ -194,6 +194,17 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
       console.log('onRenderChange not overwritten!');
       console.log('event obj: ', evt);
     };
+
+    /**
+     * This method is called when a renderer is removed from the ui.
+     *
+     * @param {String} DOM Id of the removed renderer.
+     */
+     rboxjs.RenderersBox.prototype.onRendererRemove = function(containerId) {
+
+       console.log('onRenderRemove not overwritten!');
+       console.log('renderer container id: ', containerId);
+     };
 
    /**
     * Set complementary jQuery UI sortable elements which the moving helper can be visually appended to.
@@ -321,7 +332,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
      * added or null otherwise.
      */
      rboxjs.RenderersBox.prototype.add2DRender = function(imgFileObj, orientation, callback) {
-      var render, vol, volProps;
+      var render, jqRender, vol, volProps;
       var self = this;
 
       var containerId = this.getRendererContId(imgFileObj.id);
@@ -340,26 +351,63 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
       }
 
       // append renderer div to the renderers' container
-      this.jqRBox.append(
-        '<div id="' + containerId + '" class="view-render">' +
-          '<div class="view-render-info view-render-info-topleft"></div>' +
-          '<div class="view-render-info view-render-info-topright"></div>' +
-          '<div class="view-render-info view-render-info-bottomright"></div>' +
-          '<div class="view-render-info view-render-info-bottomleft"></div>' +
+      jqRender = $(
+        '<div class="view-render">' +
+          '<div class="view-render-titlebar">' +
+            '<span class="view-render-titlebar-title ui-dialog-title"></span>' +
+            '<div class="view-render-titlebar-buttonpane">' +
+              '<button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-dialog-titlebar-close" role="button" title="Close">' +
+                '<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>' +
+              '</button>' +
+            '</div>' +
+          '</div>' +
+
+          '<div id="' + containerId + '" class="view-render-content">' +
+            '<div class="view-render-info view-render-info-topleft"></div>' +
+            '<div class="view-render-info view-render-info-topright"></div>' +
+            '<div class="view-render-info view-render-info-bottomright"></div>' +
+            '<div class="view-render-info view-render-info-bottomleft"></div>' +
+          '</div>' +
         '</div>'
       );
 
-      // rearrange layout
+      this.jqRBox.append(jqRender);
+
       ++this.numOfRenders;
+
+      // add the appropriate classes
+      $('.view-render-titlebar', jqRender).addClass("ui-dialog-titlebar ui-widget-header" +
+        " ui-corner-all");
+
+      var jqButtons = $('button', jqRender).mouseover(function() {
+        return $(this).addClass("ui-state-hover");
+      }).mouseout(function() {
+        return $(this).removeClass("ui-state-hover");
+      }).focus(function() {
+        return $(this).addClass("ui-state-focus");
+      }).blur(function() {
+        return $(this).removeClass("ui-state-focus");
+      });
+
+      jqButtons.click( function() {
+        if ($(this).attr('title') === 'Close') {
+          self.remove2DRender(containerId);
+        }
+      });
+
+      // add title
+      $('.view-render-titlebar-title', jqRender).text(imgFileObj.baseUrl + imgFileObj.files[0].name);
+
+      // rearrange layout
       this.positionRenders();
 
-      //
-      // create xtk objects
-      //
+      // create xtk renderer object
       render = this.create2DRender(containerId, orientation);
       volProps = this.getVolProps(orientation);
 
+      //
       // renderer's event handlers
+      //
       this.onRender2DScroll = function(evt) {
 
         function updateSliceInfoHTML(render) {
@@ -572,9 +620,8 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
      * Remove a 2D renderer from the renderers box.
      *
      * @param {String} renderer's container.
-     * @param {Function} optional callback.
      */
-     rboxjs.RenderersBox.prototype.remove2DRender = function(containerId, callback) {
+     rboxjs.RenderersBox.prototype.remove2DRender = function(containerId) {
 
       // find and destroy xtk objects and remove the renderer's div from the UI
       for (var i=0; i<this.renders2D.length; i++) {
@@ -591,11 +638,12 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
           this.renders2D[i].removeEventListener("onPoint", this.onRender2DPoint);
           this.renders2D[i].destroy();
           this.renders2D.splice(i, 1);
-          $('#' + containerId).remove();
+          $('#' + containerId).parent().remove();
           --this.numOfRenders;
           this.positionRenders();
           util.documentRepaint();
-          if (callback) {callback();}
+          // trigger the onRendererRemove event
+          this.onRendererRemove(containerId);
           break;
         }
       }
@@ -606,15 +654,13 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
      */
      rboxjs.RenderersBox.prototype.positionRenders = function() {
       // sort by id
-      var jqRenders = util.sortObjArr($('div.view-render', this.jqRBox), 'id');
+      var jqRenders = $('div.view-render', this.jqRBox);
 
       switch(this.numOfRenders) {
         case 1:
           jqRenders.css({
             width: '100%',
-            height: '100%',
-            top: 0,
-            left: 0
+            height: '100%'
           });
         break;
 
@@ -622,39 +668,16 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
           jqRenders.css({
             width: '50%',
             height: '100%',
-            top: 0,
-            left:0
+            float: 'left'
           });
-          jqRenders[1].style.left = '50%';
         break;
 
-        case 3:
+        default:
           jqRenders.css({
             width: '50%',
             height: '50%',
+            float: 'left'
           });
-          jqRenders[0].style.top = 0;
-          jqRenders[0].style.left = 0;
-          jqRenders[1].style.top = 0;
-          jqRenders[1].style.left = '50%';
-          jqRenders[2].style.top = '50%';
-          jqRenders[2].style.left = 0;
-          jqRenders[2].style.width = '100%';
-        break;
-
-        case 4:
-          jqRenders.css({
-            width: '50%',
-            height: '50%',
-          });
-          jqRenders[0].style.top = 0;
-          jqRenders[0].style.left = 0;
-          jqRenders[1].style.top = 0;
-          jqRenders[1].style.left = '50%';
-          jqRenders[2].style.top = '50%';
-          jqRenders[2].style.left = 0;
-          jqRenders[3].style.top = '50%';
-          jqRenders[3].style.left = '50%';
         break;
       }
     };

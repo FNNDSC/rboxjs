@@ -34,8 +34,10 @@ require(['rboxjs', 'fmjs'], function(rbox, fm) {
   var options = {
     contId: 'rboxcontainer',
     position: {
-      top: '50px',
-      left: '10px'
+      top: '6em',
+      left: '10px',
+      right: '5px',
+      bottom: '5px'
     }
   };
 
@@ -74,7 +76,7 @@ require(['rboxjs', 'fmjs'], function(rbox, fm) {
 
     rBox.add2DRender(imgFileObj, 'Z', function(render) {
       if (!render) {
-        alert('Reached maximum allowed number of renders. Please refresh the page');
+        alert('Reached maximum allowed number of renders. Please remove some renderer before adding another.');
       }
     });
   };

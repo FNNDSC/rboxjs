@@ -18,8 +18,44 @@ div.view-renders{
 /*================================================= single renderer ================================================== */
 .view-render{
   border: 1px solid #DDE8BB;
+}
+
+.view-render-titlebar{
+  position: relative;
+  margin: 0;
+  cursor: move;
+  padding: 0 10px;
+  height: 30px;
+}
+
+.view-render-titlebar-title{
+  color: #633A05;
+  font-size: 12px;
+  padding: 0;
+}
+
+.view-render-titlebar-buttonpane{
   position: absolute;
+  top: 50%;
+  right: 10px;
+  margin-top: -10px;
+  height: 18px;
+}
+
+.view-render-titlebar-buttonpane button{
+  position: relative;
+  float: right;
+  top: auto;
+  right: auto;
+  margin: 0px;
+}
+
+.view-render-content{
+  position: relative;
   background-color: black;
+  height: calc(100% - 30px);
+  margin: 0;
+  padding: 0;
 }
 
 /*================================================= patient info in renderer ================================================== */
