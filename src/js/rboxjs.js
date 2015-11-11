@@ -200,7 +200,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
      *
      * @param {String} DOM Id of the removed renderer.
      */
-     rboxjs.RenderersBox.prototype.onRendererRemove = function(containerId) {
+     rboxjs.RenderersBox.prototype.onRenderRemove = function(containerId) {
 
        console.log('onRenderRemove not overwritten!');
        console.log('renderer container id: ', containerId);
@@ -642,8 +642,8 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
           --this.numOfRenders;
           this.positionRenders();
           util.documentRepaint();
-          // trigger the onRendererRemove event
-          this.onRendererRemove(containerId);
+          // trigger the onRenderRemove event
+          this.onRenderRemove(containerId);
           break;
         }
       }
