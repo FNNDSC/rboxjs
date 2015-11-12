@@ -356,8 +356,11 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
           '<div class="view-render-titlebar">' +
             '<span class="view-render-titlebar-title ui-dialog-title"></span>' +
             '<div class="view-render-titlebar-buttonpane">' +
-              '<button type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-dialog-titlebar-close" role="button" title="Close">' +
-                '<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>' +
+              '<button type="button" class="ui-dialog-titlebar-close" role="button" title="Close">' +
+                '<span class="ui-icon-closethick"></span>' +
+              '</button>' +
+              '<button type="button" class="ui-dialog-titlebar-maximize" role="button" title="Maximize">' +
+                '<span class="ui-icon-extlink"></span>' +
               '</button>' +
             '</div>' +
           '</div>' +
@@ -375,11 +378,15 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
 
       ++this.numOfRenders;
 
-      // add the appropriate classes
+      // add the common jquery_ui classes
       $('.view-render-titlebar', jqRender).addClass("ui-dialog-titlebar ui-widget-header" +
         " ui-corner-all");
 
-      var jqButtons = $('button', jqRender).mouseover(function() {
+      var jqButtons = $('button', jqRender);
+      jqButtons.addClass("ui-button ui-widget ui-state-default ui-corner-all");
+      $('span', jqButtons).addClass("ui-button-icon-primary ui-icon");
+
+      jqButtons.mouseover(function() {
         return $(this).addClass("ui-state-hover");
       }).mouseout(function() {
         return $(this).removeClass("ui-state-hover");
@@ -389,11 +396,56 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
         return $(this).removeClass("ui-state-focus");
       });
 
+      if (this.numOfRenders === 1) {
+        
+        // hide the maximize/restore button when this renderer is alone in the UI
+        jqButtons.filter( function() {
+          if ($(this).attr('title') === 'Maximize' || $(this).attr('title') === 'Restore') {
+            return true;
+          }
+          return false;
+        }).css({display: 'none'});
+
+      } else {
+        // show any hidden button in the title bar of all renderers
+        $('.view-render button', this.jqRBox).css({display: 'block'});
+      }
+
+      // buttons' event handlers
       jqButtons.click( function() {
-        if ($(this).attr('title') === 'Close') {
+        var jqBtn = $(this);
+        var jqRs = $('.view-render', self.jqRBox);
+
+        if (jqBtn.attr('title') === 'Close') {
+
           self.remove2DRender(containerId);
+
+        } else if (jqBtn.attr('title') === 'Maximize') {
+
+          jqBtn.attr('title', 'Restore');
+
+          // toggle classes fom maximize to restore
+          jqBtn.removeClass("ui-dialog-titlebar-maximize").addClass("ui-dialog-titlebar-restore");
+          jqBtn.find('span').removeClass("ui-icon-extlink").addClass("ui-icon-newwin");
+
+          // style renderers
+          jqRs.css({display: 'none'});
+          jqRender.css({display: 'block', height: '100%', width: '100%'});
+          util.documentRepaint();
+
+        } else if (jqBtn.attr('title') === 'Restore') {
+
+          jqBtn.attr('title', 'Maximize');
+
+          // toggle classes fom restore to maximize
+          jqBtn.removeClass("ui-dialog-titlebar-restore").addClass("ui-dialog-titlebar-maximize");
+          jqBtn.find('span').removeClass("ui-icon-newwin").addClass("ui-icon-extlink");
+
+          // style renderers
+          jqRs.css({display: 'block'});
+          self.positionRenders();
         }
-      });
+      } );
 
       // add title
       $('.view-render-titlebar-title', jqRender).text(imgFileObj.baseUrl + imgFileObj.files[0].name);
@@ -406,7 +458,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
       volProps = this.getVolProps(orientation);
 
       //
-      // renderer's event handlers
+      // XTK renderer's event handlers
       //
       this.onRender2DScroll = function(evt) {
 
@@ -638,10 +690,24 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
           this.renders2D[i].removeEventListener("onPoint", this.onRender2DPoint);
           this.renders2D[i].destroy();
           this.renders2D.splice(i, 1);
+
+          // remove html and event handlers
           $('#' + containerId).parent().remove();
+
+          // reposition renderers
           --this.numOfRenders;
           this.positionRenders();
-          util.documentRepaint();
+
+          // hide the maximize/restore button when there is only one renderer
+          if (this.numOfRenders === 1) {
+            $('.view-render button', this.jqRBox).filter( function() {
+              if ($(this).attr('title') === 'Maximize' || $(this).attr('title') === 'Restore') {
+                return true;
+              }
+              return false;
+            }).css({display: 'none'});
+          }
+
           // trigger the onRenderRemove event
           this.onRenderRemove(containerId);
           break;
@@ -653,8 +719,8 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
      * Rearrange renderers in the renderers box's UI layout.
      */
      rboxjs.RenderersBox.prototype.positionRenders = function() {
-      // sort by id
-      var jqRenders = $('div.view-render', this.jqRBox);
+
+      var jqRenders = $('div.view-render', this.jqRBox).css({display: 'block'});
 
       switch(this.numOfRenders) {
         case 1:
@@ -680,6 +746,8 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
           });
         break;
       }
+
+      util.documentRepaint();
     };
 
     /**

@@ -76,7 +76,7 @@ require(['rboxjs', 'fmjs'], function(rbox, fm) {
 
     rBox.add2DRender(imgFileObj, 'Z', function(render) {
       if (!render) {
-        alert('Reached maximum allowed number of renders. Please remove some renderer before adding another.');
+        alert('Reached maximum allowed number of renderers. Please remove some renderer before adding another.');
       }
     });
   };
