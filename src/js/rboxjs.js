@@ -397,7 +397,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
       });
 
       if (this.numOfRenders === 1) {
-        
+
         // hide the maximize/restore button when this renderer is alone in the UI
         jqButtons.filter( function() {
           if ($(this).attr('title') === 'Maximize' || $(this).attr('title') === 'Restore') {
@@ -675,6 +675,14 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
      */
      rboxjs.RenderersBox.prototype.remove2DRender = function(containerId) {
 
+       // callback to get renderer's maximize/restore button when there is only one renderer left in the UI
+       var getMaxRestBtn = function() {
+         if ($(this).attr('title') === 'Maximize' || $(this).attr('title') === 'Restore') {
+           return true;
+         }
+         return false;
+       };
+
       // find and destroy xtk objects and remove the renderer's div from the UI
       for (var i=0; i<this.renders2D.length; i++) {
 
@@ -700,12 +708,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
 
           // hide the maximize/restore button when there is only one renderer
           if (this.numOfRenders === 1) {
-            $('.view-render button', this.jqRBox).filter( function() {
-              if ($(this).attr('title') === 'Maximize' || $(this).attr('title') === 'Restore') {
-                return true;
-              }
-              return false;
-            }).css({display: 'none'});
+            $('.view-render button', this.jqRBox).filter(getMaxRestBtn).css({display: 'none'});
           }
 
           // trigger the onRenderRemove event
