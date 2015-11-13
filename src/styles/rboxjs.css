@@ -29,6 +29,15 @@ div.view-renders{
 }
 
 .view-render-titlebar-title{
+  float: left;
+  line-height: 30px;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: -webkit-calc(100% - 40px);
+  width: -moz-calc(100% - 40px);
+  width: calc(100% - 40px);
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: #633A05;
   font-size: 12px;
   padding: 0;
@@ -37,7 +46,7 @@ div.view-renders{
 .view-render-titlebar-buttonpane{
   position: absolute;
   top: 50%;
-  right: 10px;
+  right: 6px;
   margin-top: -10px;
   height: 18px;
 }
@@ -53,6 +62,8 @@ div.view-renders{
 .view-render-content{
   position: relative;
   background-color: black;
+  height: -webkit-calc(100% - 30px);
+  height: -moz-calc(100% - 30px);
   height: calc(100% - 30px);
   margin: 0;
   padding: 0;

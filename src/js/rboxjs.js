@@ -354,7 +354,7 @@ define(['utiljs', 'jszip', 'jquery_ui', 'xtk', 'dicomParser'], function(util, js
       jqRender = $(
         '<div class="view-render">' +
           '<div class="view-render-titlebar">' +
-            '<span class="view-render-titlebar-title ui-dialog-title"></span>' +
+            '<span class="view-render-titlebar-title"></span>' +
             '<div class="view-render-titlebar-buttonpane">' +
               '<button type="button" class="ui-dialog-titlebar-close" role="button" title="Close">' +
                 '<span class="ui-icon-closethick"></span>' +

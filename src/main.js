@@ -34,7 +34,7 @@ require(['rboxjs', 'fmjs'], function(rbox, fm) {
   var options = {
     contId: 'rboxcontainer',
     position: {
-      top: '6em',
+      top: '9em',
       left: '10px',
       right: '5px',
       bottom: '5px'
