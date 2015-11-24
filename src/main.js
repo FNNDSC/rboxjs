@@ -15,15 +15,16 @@ require.config({
     gapi: 'https://apis.google.com/js/api',
     jszip: 'jszip/dist/jszip',
     dicomParser: 'dicomParser/dist/dicomParser.min',
-    xtk: '../lib/xtk',
     utiljs: 'utiljs/src/js/utiljs',
     fmjs: 'fmjs/src/js/fmjs',
+    xtk: 'rendererjs/src/js/lib/xtk',
+    rendererjs: 'rendererjs/src/js/rendererjs',
     rboxjs: '../rboxjs'
   }
 });
 
 
-require(['rboxjs', 'fmjs'], function(rbox, fm) {
+require(['rboxjs', 'rendererjs', 'fmjs'], function(rbox, renderer, fm) {
   // Entry point
 
   // Create a file manager object
@@ -32,13 +33,14 @@ require(['rboxjs', 'fmjs'], function(rbox, fm) {
 
   // renderers box options object
   var options = {
-    contId: 'rboxcontainer',
+    container: document.getElementById('rboxcontainer'),
     position: {
       top: '9em',
       left: '10px',
       right: '5px',
       bottom: '5px'
-    }
+    },
+    renderersIdPrefix: 'renderer'
   };
 
   // Create a renderers box. The second parameter (a file manager) is optional and only required
@@ -62,7 +64,7 @@ require(['rboxjs', 'fmjs'], function(rbox, fm) {
     var baseUrl = "/";
 
     imgFileObj.id++;
-    imgFileObj.imgType = rbox.RenderersBox.imgType(files[0]);
+    imgFileObj.imgType = renderer.Renderer.imgType(files[0]);
 
     if ((imgFileObj.imgType === 'dicom') || (imgFileObj.imgType === 'dicomzip')) {
       imgFileObj.files = files;
@@ -74,7 +76,7 @@ require(['rboxjs', 'fmjs'], function(rbox, fm) {
       imgFileObj.baseUrl = files[0].webkitRelativePath;
     }
 
-    rBox.add2DRender(imgFileObj, 'Z', function(render) {
+    rBox.addRenderer(imgFileObj, 'Z', function(render) {
       if (!render) {
         alert('Reached maximum allowed number of renderers. Please remove some renderer before adding another.');
       }

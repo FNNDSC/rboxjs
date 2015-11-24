@@ -5,7 +5,7 @@
 }
 
 /*================================================= RENDERER DIV ================================================== */
-div.view-renders{
+div.view-renderers{
   position: absolute;
   height: 100%;
   width: 100%;
@@ -13,84 +13,4 @@ div.view-renders{
   border: 1px solid #DDE8BB;
   background-color: black;
   font-family: 'Droid Sans', sans-serif;
-}
-
-/*================================================= single renderer ================================================== */
-.view-render{
-  border: 1px solid #DDE8BB;
-}
-
-.view-render-titlebar{
-  position: relative;
-  margin: 0;
-  cursor: move;
-  padding: 0 10px;
-  height: 30px;
-}
-
-.view-render-titlebar-title{
-  float: left;
-  line-height: 30px;
-  vertical-align: middle;
-  white-space: nowrap;
-  width: -webkit-calc(100% - 40px);
-  width: -moz-calc(100% - 40px);
-  width: calc(100% - 40px);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #633A05;
-  font-size: 12px;
-  padding: 0;
-}
-
-.view-render-titlebar-buttonpane{
-  position: absolute;
-  top: 50%;
-  right: 6px;
-  margin-top: -10px;
-  height: 18px;
-}
-
-.view-render-titlebar-buttonpane button{
-  position: relative;
-  float: right;
-  top: auto;
-  right: auto;
-  margin: 0px;
-}
-
-.view-render-content{
-  position: relative;
-  background-color: black;
-  height: -webkit-calc(100% - 30px);
-  height: -moz-calc(100% - 30px);
-  height: calc(100% - 30px);
-  margin: 0;
-  padding: 0;
-}
-
-/*================================================= patient info in renderer ================================================== */
-.view-render-info{
-  position: absolute;
-  z-index: 90;
-  color: #DDE8BB;
-  font-size: 11px;
-}
-.view-render-info-topleft{
-  top: 2px;
-  left: 10px;
-}
-.view-render-info-topright{
-  top: 2px;
-  right: 10px;
-  text-align:right;
-}
-.view-render-info-bottomright{
-  bottom: 2px;
-  right: 10px;
-  text-align:right;
-}
-.view-render-info-bottomleft{
-  bottom: 2px;
-  left: 10px;
 }
