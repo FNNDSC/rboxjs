@@ -255,7 +255,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
       // renderer options object
       var options = {
         container: jqR[0],
-        rendererId: self.renderersIdPrefix + imgFileObj.id, // for the internal XTK renderer container
+        rendererId: self.getRendererContId(imgFileObj.id), // for the internal XTK renderer container
         orientation: orientation
       };
 
@@ -407,6 +407,29 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
       util.documentRepaint();
     };
 
+    /**
+     * Return a renderer's internal XTK renderer's container DOM id.
+     *
+     * @param {Number} renderer's integer id.
+     * @return {String} the renderer's container DOM id.
+     */
+     rboxjs.RenderersBox.prototype.getRendererContId = function(id) {
+
+       // the internal XTK renderer's container DOM id is related to the renderer's integer id
+       return this.renderersIdPrefix + id;
+    };
+
+    /**
+     * Returns a renderer's integer id.
+     *
+     * @param {String} the renderer's internal XTK renderer's container DOM id.
+     * @return {Number} the renderer's integer id.
+     */
+     rboxjs.RenderersBox.prototype.getRendererId = function(rendererContId) {
+
+       // the renderer's integer id is related to the internal XTK renderer's container DOM id
+       return  parseInt(rendererContId.replace(this.renderersIdPrefix, ""));
+    };
 
     /**
      * Destroy all objects and remove html interface
