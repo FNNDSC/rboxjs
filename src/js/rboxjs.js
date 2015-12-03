@@ -224,10 +224,19 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
     /**
      * Create and add a renderer with a loaded volume to the renderers box.
      *
-     * @param {Oject} Image file object as in rboxjs.RenderersBox.prototype.createVolume.
+     * @param {Object} image file object with the following properties:
+     *  -id: Integer id
+     *  -baseUrl: String ‘directory/containing/the/files’
+     *  -imgType: String neuroimage type. Any of the possible values returned by rendererjs.Renderer.imgType
+     *  -files: Array of HTML5 File objects or custom file objects with properties:
+     *     -remote: a boolean indicating whether the file has not been read locally (with a filepicker)
+     *     -url the file's url
+     *     -cloudId: the id of the file in a cloud storage system if stored in the cloud
+     *     -name: file name
+     *  The files array contains a single file for imgType different from 'dicom' or 'dicomzip'
+     *  -json: Optional HTML5 or custom File object (optional json file with the mri info for imgType different from 'dicom')
      * @param {String} X, Y or Z orientation.
-     * @param {Function} optional callback whose argument is the renderer object if successfuly
-     * added or null otherwise.
+     * @param {Function} optional callback whose argument is the renderer object if successfuly added or null otherwise.
      */
      rboxjs.RenderersBox.prototype.addRenderer = function(imgFileObj, orientation, callback) {
       var jqR;
