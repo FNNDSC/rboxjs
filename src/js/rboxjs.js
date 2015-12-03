@@ -309,11 +309,14 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
           // change slice in the other renderers
           self.renderers.forEach( function(rndr) {
 
-            if ((targetRndr.id !== rndr.id) && (targetRndr.orientation !== rndr.orientation)) {
+            if ((targetRndr.id !== rndr.id) && (targetRndr.orientation === rndr.orientation)) {
 
               if (evt.up) {
+
                 rndr.volume[volProps.index]++;
+
               } else {
+                
                 rndr.volume[volProps.index]--;
               }
 
