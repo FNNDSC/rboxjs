@@ -207,6 +207,17 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
       console.log('event obj: ', evt);
     };
 
+    /**
+     * This method is called everytime a renderer is removed from the renderers box.
+     *
+     * @param {Number} integer id of the removed renderer.
+     */
+     rboxjs.RenderersBox.prototype.onRendererRemove = function(id) {
+
+       console.log('onRendererRemove not overwritten!');
+       console.log('renderer integer id: ', id);
+     };
+
    /**
     * Set complementary jQuery UI sortable elements which the moving helper can be visually appended to.
     *
@@ -316,7 +327,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
                 rndr.volume[volProps.index]++;
 
               } else {
-                
+
                 rndr.volume[volProps.index]--;
               }
 
@@ -359,10 +370,11 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
      * @param {Object} a renderer object.
      */
      rboxjs.RenderersBox.prototype.removeRenderer = function(rndr) {
+       var id = rndr.id;
 
       for (var i=0; i<this.renderers.length; i++) {
 
-        if (this.renderers[i].id === rndr.id) {
+        if (this.renderers[i].id === id) {
 
           this.renderers.splice(i, 1);
 
@@ -378,6 +390,9 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
           if (this.numOfRenderers === 1) {
             $('.view-renderer-titlebar-buttonpane-maximize', this.container).css({display: 'none'});
           }
+
+          // throw rBox's onRendererRemove event
+          this.onRendererRemove(id);
 
           break;
         }
