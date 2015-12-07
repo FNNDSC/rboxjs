@@ -258,11 +258,14 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
       });
 
       if (rArr.length) {
+
         // renderer already added
         if (callback) { callback(rArr[0]); }
+        return;
       }
 
       if (self.numOfRenderers === self.maxNumOfRenderers) {
+        
         // already reached maximum number of renderers so this renderer can not be added
         if (callback) {callback(null);}
         return;
