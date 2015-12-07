@@ -7,13 +7,15 @@ define(['rboxjs'], function(rboxjs) {
 
   describe('rboxjs', function() {
     var rBox;
+
     // renderers box options object
     var options = {
-      contId: 'rboxcontainer',
+      container: 'rboxcontainer',
       position: {
         top: '50px',
         left: '10px'
-      }
+      },
+      renderersIdPrefix: 'renderer'
     };
 
     // Append container div
@@ -29,9 +31,11 @@ define(['rboxjs'], function(rboxjs) {
       rBox.destroy();
     });
 
-    it('rboxjs.RenderersBox.prototype.getVolProps("Z") returns 2',
+    it('rboxjs.RenderersBox container has class ui-sortable',
       function () {
-        expect(rBox.getVolProps('Z').rangeInd).toEqual(2);
+        var val = rBox.container.hasClass('ui-sortable');
+
+        expect(val).toEqual(true);
       }
     );
 
