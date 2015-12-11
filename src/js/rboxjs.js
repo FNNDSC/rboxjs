@@ -88,15 +88,18 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
 
          //event handlers
          helper: function(evt, target) { // visually moving element
+
            return self.computeMovingHelper(evt, target);
          },
 
          start: function(evt, ui) {
+
            self.onStart(evt, ui);
          },
 
          // beforeStop is called when the placeholder is still in the list
          beforeStop: function(evt, ui) {
+
            self.onBeforeStop(evt, ui);
          }
       };
@@ -113,6 +116,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
      * @param {Object} css position object with possible properties: "top", "bottom", "left" and "right".
      */
      rboxjs.RenderersBox.prototype.setPosition = function(pos) {
+
        var container = this.container;
        var t = "", r = "", b = "", l = "";
 
@@ -196,16 +200,16 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
        console.log('ui obj: ', ui);
      };
 
-   /**
-    * This method is called everytime a renderer in the UI changes state.
-    *
-    * @param {Object} event object.
-    */
-    rboxjs.RenderersBox.prototype.onRendererChange = function(evt) {
+    /**
+     * This method is called everytime a renderer in the UI changes state.
+     *
+     * @param {Object} event object.
+     */
+     rboxjs.RenderersBox.prototype.onRendererChange = function(evt) {
 
-      console.log('onRendererChange not overwritten!');
-      console.log('event obj: ', evt);
-    };
+       console.log('onRendererChange not overwritten!');
+       console.log('event obj: ', evt);
+     };
 
     /**
      * This method is called everytime a renderer is removed from the renderers box.
@@ -218,19 +222,19 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
        console.log('renderer integer id: ', id);
      };
 
-   /**
-    * Set complementary jQuery UI sortable elements which the moving helper can be visually appended to.
-    *
-    * @param {String} css selector indicating the complementary sortable elements.
-    */
-    rboxjs.RenderersBox.prototype.setComplementarySortableElems = function(cssSelector) {
+    /**
+     * Set complementary jQuery UI sortable elements which the moving helper can be visually appended to.
+     *
+     * @param {String} css selector indicating the complementary sortable elements.
+     */
+     rboxjs.RenderersBox.prototype.setComplementarySortableElems = function(cssSelector) {
 
-      // the moving helper element can be appended to these elements
-      this.container.sortable( "option", "appendTo", cssSelector);
+       // the moving helper element can be appended to these elements
+       this.container.sortable( "option", "appendTo", cssSelector);
 
-      // connect with these sortable elements
-      this.container.sortable( "option", "connectWith", cssSelector);
-    };
+       // connect with these sortable elements
+       this.container.sortable( "option", "connectWith", cssSelector);
+     };
 
     /**
      * Create and add a renderer with a loaded volume to the renderers box.
@@ -250,122 +254,137 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
      * @param {Function} optional callback whose argument is the renderer object if successfuly added or null otherwise.
      */
      rboxjs.RenderersBox.prototype.addRenderer = function(imgFileObj, orientation, callback) {
-      var jqR;
-      var self = this;
+       var self = this;
 
-      var rArr = self.renderers.filter( function(el) {
-        return el.id === imgFileObj.id;
-      });
+       var rArr = self.renderers.filter( function(el) {
 
-      if (rArr.length) {
+         return el.id === imgFileObj.id;
+       });
 
-        // renderer already added
-        if (callback) { callback(rArr[0]); }
-        return;
-      }
+       if (rArr.length) {
 
-      if (self.numOfRenderers === self.maxNumOfRenderers) {
-        
-        // already reached maximum number of renderers so this renderer can not be added
-        if (callback) {callback(null);}
-        return;
-      }
+         // renderer already added
+         if (callback) { callback(rArr[0]); }
 
-      // append html renderer's container
-      jqR = $('<div></div>');
-      self.container.append(jqR);
+         return;
+       }
 
-      // renderer options object
-      var options = {
-        container: jqR[0],
-        rendererId: self.getRendererContId(imgFileObj.id), // for the internal XTK renderer container
-        orientation: orientation
-      };
+       if (self.numOfRenderers === self.maxNumOfRenderers) {
 
-      // create a renderer
-      var r = new renderer.Renderer(options, self.fileManager);
+         // already reached maximum number of renderers so this renderer can not be added
+         if (callback) {callback(null);}
 
-      // assign an integer id
-      r.id = imgFileObj.id;
+         return;
+       }
 
-      // overwrite event handler for the renderer's close button
-      r.onRendererClose = function() {
-        self.removeRenderer(r);
-      };
+       // append html renderer's container
+       var jqR = $('<div></div>');
+       self.container.append(jqR);
 
-      // overwrite event handler for the onRendererChange
-      r.onRendererChange = function(evt) {
-        var targetRndr = this;
+       // renderer options object
+       var options = {
+         container: jqR[0],
+         rendererId: self.getRendererContId(imgFileObj.id), // for the internal XTK renderer container
+         orientation: orientation
+       };
 
-        // maximize button click event
-        if ((evt.type === 'click') && $(evt.currentTarget).hasClass('view-renderer-titlebar-buttonpane-maximize')) {
+       // create a renderer
+       var r = new renderer.Renderer(options, self.fileManager);
 
-          // style renderers
-          if (targetRndr.maximized) {
+       // assign an integer id
+       r.id = imgFileObj.id;
 
-            self.renderers.forEach( function(rndr) {
+       // overwrite event handler for the renderer's close button
+       r.onRendererClose = function() {
 
-              if (targetRndr.id !== rndr.id) {
-                rndr.container.css({ display: 'none' });
-              }
-            });
+         self.removeRenderer(r);
+       };
 
-          } else {
-            self.positionRenderers();
-          }
-        }
+       // overwrite event handler for the onRendererChange
+       r.onRendererChange = function(evt) {
+         var targetRndr = this;
 
-        // scroll event
-        if ((evt.type === 'scroll_3') && self.renderersLinked) {
+         // maximize button click event
+         if ((evt.type === 'click') && $(evt.currentTarget).hasClass('view-renderer-titlebar-buttonpane-maximize')) {
 
-          var volProps = targetRndr.getVolProps(targetRndr.orientation);
+           // style renderers
+           if (targetRndr.maximized) {
 
-          // change slice in the other renderers
-          self.renderers.forEach( function(rndr) {
+             self.renderers.forEach( function(rndr) {
 
-            if ((targetRndr.id !== rndr.id) && (targetRndr.orientation === rndr.orientation)) {
+               if (targetRndr.id !== rndr.id) {
+                 rndr.container.css({ display: 'none' });
+               }
+             });
 
-              if (evt.up) {
+           } else {
+             self.positionRenderers();
+           }
+         }
 
-                rndr.volume[volProps.index]++;
+         // scroll event
+         if ((evt.type === 'scroll_3') && self.renderersLinked) {
 
-              } else {
+           var volProps = targetRndr.getVolProps(targetRndr.orientation);
 
-                rndr.volume[volProps.index]--;
-              }
+           // change slice in the other renderers
+           self.renderers.forEach( function(rndr) {
 
-              rndr.updateUISliceInfo();
-            }
-          });
-        }
+             if ((targetRndr.id !== rndr.id) && (targetRndr.orientation === rndr.orientation)) {
 
-        // throw rBox's onRendererChange event
-        self.onRendererChange(evt);
-      };
+               if (evt.up) {
 
-      // start the rendering
-      r.init(imgFileObj, function() {
-        if (callback) { callback(r); }
-      });
+                 rndr.volume[volProps.index]++;
 
-      // add renderer to the list of current UI renderers
-      self.renderers.push(r);
-      ++self.numOfRenderers;
+               } else {
 
-      if (self.numOfRenderers === 1) {
+                 rndr.volume[volProps.index]--;
+               }
 
-        // hide the maximize/restore button when this renderer is alone in the UI
-        $('.view-renderer-titlebar-buttonpane-maximize', jqR).css({display: 'none'});
+               rndr.updateUISliceInfo();
+             }
+           });
+         }
 
-      } else {
+         // throw rBox's onRendererChange event
+         self.onRendererChange(evt);
+       };
 
-        // show any hidden button in the title bar of all renderers
-        $('.view-renderer-titlebar-buttonpane-maximize', self.container).css({display: 'block'});
-      }
+       // add renderer to the list of current UI renderers
+       self.renderers.push(r);
+       ++self.numOfRenderers;
 
-      // rearrange layout
-      self.positionRenderers();
-    };
+       // start the rendering
+       r.init(imgFileObj, function() {
+
+         if (r.error) {
+
+           // couldn't render so remove the renderer
+           self.removeRenderer(r);
+
+           if (callback) { callback(null); }
+
+         } else {
+
+           // renderer ready
+           if (callback) { callback(r); }
+         }
+       });
+
+       if (self.numOfRenderers === 1) {
+
+         // hide the maximize/restore button when this renderer is alone in the UI
+         $('.view-renderer-titlebar-buttonpane-maximize', jqR).css({display: 'none'});
+
+       } else {
+
+         // show any hidden button in the title bar of all renderers
+         $('.view-renderer-titlebar-buttonpane-maximize', self.container).css({display: 'block'});
+       }
+
+       // rearrange layout
+       self.positionRenderers();
+     };
 
     /**
      * Remove a renderer from the renderers box.
@@ -375,67 +394,67 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
      rboxjs.RenderersBox.prototype.removeRenderer = function(rndr) {
        var id = rndr.id;
 
-      for (var i=0; i<this.renderers.length; i++) {
+       for (var i=0; i<this.renderers.length; i++) {
 
-        if (this.renderers[i].id === id) {
+         if (this.renderers[i].id === id) {
 
-          this.renderers.splice(i, 1);
+           this.renderers.splice(i, 1);
 
-          // remove HTML interface and event handlers
-          rndr.destroy();
-          rndr.container.remove();
+           // remove HTML interface and event handlers
+           rndr.destroy();
+           rndr.container.remove();
 
-          // reposition renderers
-          --this.numOfRenderers;
-          this.positionRenderers();
+           // reposition renderers
+           --this.numOfRenderers;
+           this.positionRenderers();
 
-          // hide the maximize/restore button when there is only one renderer
-          if (this.numOfRenderers === 1) {
-            $('.view-renderer-titlebar-buttonpane-maximize', this.container).css({display: 'none'});
-          }
+           // hide the maximize/restore button when there is only one renderer
+           if (this.numOfRenderers === 1) {
+             $('.view-renderer-titlebar-buttonpane-maximize', this.container).css({display: 'none'});
+           }
 
-          // throw rBox's onRendererRemove event
-          this.onRendererRemove(id);
+           // throw rBox's onRendererRemove event
+           this.onRendererRemove(id);
 
-          break;
-        }
-      }
-    };
+           break;
+         }
+       }
+     };
 
     /**
      * Rearrange renderers in the renderers box's UI layout.
      */
      rboxjs.RenderersBox.prototype.positionRenderers = function() {
 
-      var jqRenderers = $('div.view-renderer', this.container).css({display: 'block'});
+       var jqRenderers = $('div.view-renderer', this.container).css({display: 'block'});
 
-      switch(this.numOfRenderers) {
-        case 1:
-          jqRenderers.css({
-            width: '100%',
-            height: '100%'
-          });
-        break;
+       switch(this.numOfRenderers) {
+         case 1:
+            jqRenderers.css({
+              width: '100%',
+              height: '100%'
+            });
+         break;
 
-        case 2:
-          jqRenderers.css({
-            width: '50%',
-            height: '100%',
-            float: 'left'
-          });
-        break;
+         case 2:
+            jqRenderers.css({
+              width: '50%',
+              height: '100%',
+              float: 'left'
+            });
+         break;
 
-        default:
-          jqRenderers.css({
-            width: '50%',
-            height: '50%',
-            float: 'left'
-          });
-        break;
-      }
+         default:
+            jqRenderers.css({
+              width: '50%',
+              height: '50%',
+              float: 'left'
+            });
+         break;
+       }
 
-      util.documentRepaint();
-    };
+       util.documentRepaint();
+     };
 
     /**
      * Return a renderer's internal XTK renderer's container DOM id.
@@ -466,16 +485,16 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
      */
      rboxjs.RenderersBox.prototype.destroy = function() {
 
-      // destroy renderers
-      for (var i=this.renderers.length-1; i>=0; i--) {
-        this.removeRenderer(this.renderers[i]);
-      }
+       // destroy renderers
+       for (var i=this.renderers.length-1; i>=0; i--) {
+         this.removeRenderer(this.renderers[i]);
+       }
 
-      // remove html
-      this.container.empty();
-      this.container = null;
-    };
+       // remove html
+       this.container.empty();
+       this.container = null;
+     };
 
 
-    return rboxjs;
+     return rboxjs;
   });

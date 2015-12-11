@@ -67,18 +67,32 @@ require(['rboxjs', 'rendererjs', 'fmjs'], function(rbox, renderer, fm) {
     imgFileObj.imgType = renderer.Renderer.imgType(files[0]);
 
     if ((imgFileObj.imgType === 'dicom') || (imgFileObj.imgType === 'dicomzip')) {
+      
       imgFileObj.files = files;
+
     } else {
+
       imgFileObj.files = [files[0]];
     }
 
     if ('webkitRelativePath' in files[0]) {
+
       imgFileObj.baseUrl = files[0].webkitRelativePath;
     }
 
     rBox.addRenderer(imgFileObj, 'Z', function(render) {
+
       if (!render) {
-        alert('Reached maximum allowed number of renderers. Please remove some renderer before adding another.');
+
+        // renderer could not be added to the renderers box
+        if (rBox.numOfRenderers === rBox.maxNumOfRenderers) {
+
+          alert('Reached maximum allowed number of renderers. Please remove a renderer before trying to add another.');
+
+        } else {
+
+          alert('Bad data! Unsuccessful rendering attempt.');
+        }
       }
     });
   };
