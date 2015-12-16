@@ -10,7 +10,6 @@ div.view-renderers{
   height: 100%;
   width: 100%;
   margin: 0;
-  border: 1px solid #DDE8BB;
-  background-color: black;
+  background-color: #212121;
   font-family: 'Droid Sans', sans-serif;
 }
