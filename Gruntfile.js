@@ -18,25 +18,11 @@ module.exports = function(grunt) {
     testFiles: ['spec/*.spec.js'], // test files (jasmine specs)
 
     // Task configuration.
-    jshint: { // check javascript syntax and errors
+    jscs: { // check javascript style
       options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        undef: true,
-        unused: true,
-        boss: true,
-        eqnull: true,
-        browser: true,
-        globals: {
-          jQuery: true, $: true, X: true, dicomParser: true, console: true, alert: true,
-          require: true, describe: true, it: true, expect: true, beforeEach: true,
-          afterEach: true, define: true
-        }
+        config: '.jscsrc',  // configuration file
+        fix: true,
+        force: true
       },
       source: {
         src: '<%= srcFiles %>'
@@ -46,6 +32,21 @@ module.exports = function(grunt) {
       },
       test: {
         src: '<%= testFiles %>'
+      }
+    },
+
+    jshint: { // check javascript syntax and errors
+      options: {
+        jshintrc: true // configuration file
+      },
+      source: {
+        src: '<%= jscs.source.src %>'
+      },
+      gruntfile: {
+        src: '<%= jscs.gruntfile.src %>'
+      },
+      test: {
+        src: '<%= jscs.test.src %>'
       }
     },
 
@@ -92,11 +93,11 @@ module.exports = function(grunt) {
     copy: {
       components: { // copy requiered bower components which were not concatenated
         files: [
-          { expand: true,
+          {expand: true,
             cwd: '<%= componentsDir %>',
             src: ['requirejs/require.js', 'jquery/dist/jquery.min.js',
               'jquery-ui/jquery-ui.min.js', 'jquery-ui/themes/smoothness/**'],
-            dest: 'dist/js/components' }]
+            dest: 'dist/js/components'}]
       }
     },
 
@@ -116,21 +117,21 @@ module.exports = function(grunt) {
     },
 
     browserSync: {
-        dev: {
-            bsFiles: {
-                src : [
-                    'src/**/*.js',
-                    'src/**/*.css',
-                    'src/**/*.html'
-                ]
-            },
-            options: {
-                watchTask: true,
-                // test to move bower_components out...
-                // bower_components not used yet...
-                server: ['src', 'bower_components']
-            }
+      dev: {
+        bsFiles: {
+          src: [
+              'src/**/*.js',
+              'src/**/*.css',
+              'src/**/*.html'
+          ]
+        },
+        options: {
+          watchTask: true,
+          // test to move bower_components out...
+          // bower_components not used yet...
+          server: ['src', 'bower_components']
         }
+      }
     },
 
   });
@@ -140,12 +141,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-jscs');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-browser-sync');
 
   // Serve task.
-  grunt.registerTask('serve', function (/*target*/) {
+  grunt.registerTask('serve', function(/*target*/) {
     // grunt server:dist not implemented yet...
 
     // if (target === 'dist') {
@@ -160,9 +162,9 @@ module.exports = function(grunt) {
   });
 
   // Test task.
-  grunt.registerTask('test', ['jshint', 'jasmine']);
+  grunt.registerTask('test', ['jscs', 'jshint', 'jasmine']);
   // Build task.
-  grunt.registerTask('build', ['cssmin', 'jshint', 'jasmine', 'requirejs', 'copy']);
+  grunt.registerTask('build', ['cssmin', 'jscs', 'jshint', 'jasmine', 'requirejs', 'copy']);
   // Default task.
   grunt.registerTask('default', ['build']);
 

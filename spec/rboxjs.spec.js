@@ -21,7 +21,6 @@ define(['rboxjs'], function(rboxjs) {
     // Append container div
     $(document.body).append('<div id="rboxcontainer"></div>');
 
-
     beforeEach(function() {
       rBox = new rboxjs.RenderersBox(options);
       rBox.init();
@@ -32,7 +31,7 @@ define(['rboxjs'], function(rboxjs) {
     });
 
     it('rboxjs.RenderersBox container has class ui-sortable',
-      function () {
+      function() {
         var val = rBox.container.hasClass('ui-sortable');
 
         expect(val).toEqual(true);
