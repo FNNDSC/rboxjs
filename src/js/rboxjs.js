@@ -254,7 +254,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
   rboxjs.RenderersBox.prototype.addRenderer = function(imgFileObj, orientation, callback) {
      var self = this;
 
-     var rArr = self.renderers.filter(function(el) {
+     var rArr = self.renderers.filter( function(el) {
 
        return el.id === imgFileObj.id;
      });
@@ -528,7 +528,6 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
     this.container.empty();
     this.container = null;
   };
-
 
   return rboxjs;
 });
