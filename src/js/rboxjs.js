@@ -52,9 +52,6 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
     // list of currently rendered renderer objects
     this.renderers = [];
 
-    // whether renderers' scrolling events are linked
-    this.renderersLinked = false;
-
     // maximum number of renderers
     this.maxNumOfRenderers = 4;
 
@@ -63,7 +60,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
 
     // file manager object
     this.fileManager = null;
-    if (fileManager) {this.fileManager = fileManager;}
+    if (fileManager) { this.fileManager = fileManager; }
   };
 
   /**
@@ -71,6 +68,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
    */
   rboxjs.RenderersBox.prototype.init = function() {
     var self = this;
+
     var container = self.container;
 
     // add the appropriate classes
@@ -254,137 +252,138 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
    * @param {Function} optional callback whose argument is the renderer object if successfuly added or null otherwise.
    */
   rboxjs.RenderersBox.prototype.addRenderer = function(imgFileObj, orientation, callback) {
-       var self = this;
+     var self = this;
 
-       var rArr = self.renderers.filter(function(el) {
+     var rArr = self.renderers.filter(function(el) {
 
-         return el.id === imgFileObj.id;
-       });
+       return el.id === imgFileObj.id;
+     });
 
-       if (rArr.length) {
+     if (rArr.length) {
 
-         // renderer already added
-         if (callback) { callback(rArr[0]); }
+       // renderer already added
+       if (callback) { callback(rArr[0]); }
 
-         return;
-       }
+       return;
+     }
 
-       if (self.numOfRenderers === self.maxNumOfRenderers) {
+     if (self.numOfRenderers === self.maxNumOfRenderers) {
 
-         // already reached maximum number of renderers so this renderer can not be added
-         if (callback) {callback(null);}
+       // already reached maximum number of renderers so this renderer can not be added
+       if (callback) { callback(null); }
 
-         return;
-       }
+       return;
+     }
 
-       // append html renderer's container
-       var jqR = $('<div></div>');
-       self.container.append(jqR);
+     // append html renderer's container
+     var jqR = $('<div></div>');
+     self.container.append(jqR);
 
-       // renderer options object
-       var options = {
-         container: jqR[0],
-         rendererId: self.getRendererContId(imgFileObj.id), // for the internal XTK renderer container
-         orientation: orientation
-       };
+     // renderer options object
+     var options = {
+       container: jqR[0],
+       rendererId: self.getRendererContId(imgFileObj.id), // for the internal XTK renderer container
+       orientation: orientation
+     };
 
-       // create a renderer
-       var r = new renderer.Renderer(options, self.fileManager);
+     // create a renderer
+     var r = new renderer.Renderer(options, self.fileManager);
 
-       // assign an integer id
-       r.id = imgFileObj.id;
+     // assign an integer id
+     r.id = imgFileObj.id;
 
-       // overwrite event handler for the renderer's close button
-       r.onRendererClose = function() {
+     // overwrite event handler for the renderer's close button
+     r.onRendererClose = function() {
 
-         self.removeRenderer(r);
-       };
+       self.removeRenderer(r);
+     };
 
-       // overwrite event handler for the onRendererChange
-       r.onRendererChange = function(evt) {
-         var targetRndr = this;
+     // overwrite event handler for the onRendererChange
+     r.onRendererChange = function(evt) {
+       var targetRndr = this;
 
-         // maximize button click event
-         if ((evt.type === 'click') && $(evt.currentTarget).hasClass('view-renderer-titlebar-buttonpane-maximize')) {
+       // maximize button click event
+       if ((evt.type === 'click') && $(evt.currentTarget).hasClass('view-renderer-titlebar-buttonpane-maximize')) {
 
-           // style renderers
-           if (targetRndr.maximized) {
+         // style renderers
+         if (targetRndr.maximized) {
 
-             self.renderers.forEach(function(rndr) {
+           self.renderers.forEach( function(rndr) {
 
-               if (targetRndr.id !== rndr.id) {
-                 rndr.container.css({display: 'none'});
-               }
-             });
-
-           } else {
-             self.positionRenderers();
-           }
-         }
-
-         // scroll event
-         if ((evt.type === 'scroll_3') && self.renderersLinked) {
-
-           var volProps = targetRndr.getVolProps(targetRndr.orientation);
-
-           // change slice in the other renderers
-           self.renderers.forEach(function(rndr) {
-
-             if ((targetRndr.id !== rndr.id) && (targetRndr.orientation === rndr.orientation)) {
-
-               if (evt.up) {
-
-                 rndr.volume[volProps.index]++;
-
-               } else {
-
-                 rndr.volume[volProps.index]--;
-               }
-
-               rndr.updateUISliceInfo();
+             if (targetRndr.id !== rndr.id) {
+               rndr.container.css({display: 'none'});
              }
            });
-         }
-
-         // throw rBox's onRendererChange event
-         self.onRendererChange(evt);
-       };
-
-       // add renderer to the list of current UI renderers
-       self.renderers.push(r);
-       ++self.numOfRenderers;
-
-       // start the rendering
-       r.init(imgFileObj, function() {
-
-         if (r.error) {
-
-           // couldn't render so remove the renderer
-           self.removeRenderer(r);
-
-           if (callback) { callback(null); }
 
          } else {
 
-           // renderer ready
-           if (callback) { callback(r); }
+           self.positionRenderers();
          }
-       });
+       }
 
-       if (self.numOfRenderers === 1) {
+       // scroll event
+       if (evt.type === 'scroll_3') {
 
-         // hide the maximize/restore button when this renderer is alone in the UI
-         $('.view-renderer-titlebar-buttonpane-maximize', jqR).css({display: 'none'});
+         var volProps = targetRndr.getVolProps(targetRndr.orientation);
+
+         // change slice in the other selected renderers
+         self.getSelectedRenderers().forEach( function(rndr) {
+
+           if (targetRndr.id !== rndr.id) {
+
+             if (evt.up) {
+
+               rndr.volume[volProps.index]++;
+
+             } else {
+
+               rndr.volume[volProps.index]--;
+             }
+
+             rndr.updateUISliceInfo();
+           }
+         });
+       }
+
+       // throw rBox's onRendererChange event
+       self.onRendererChange(evt);
+     };
+
+     // add renderer to the list of current UI renderers
+     self.renderers.push(r);
+     ++self.numOfRenderers;
+
+     // start the rendering
+     r.init(imgFileObj, function() {
+
+       if (r.error) {
+
+         // couldn't render so remove the renderer
+         self.removeRenderer(r);
+
+         if (callback) { callback(null); }
 
        } else {
 
-         // show any hidden button in the title bar of all renderers
-         $('.view-renderer-titlebar-buttonpane-maximize', self.container).css({display: 'block'});
+         // renderer ready
+         if (callback) { callback(r); }
        }
+     });
 
-       // rearrange layout
-       self.positionRenderers();
-     };
+     if (self.numOfRenderers === 1) {
+
+       // hide the maximize/restore button when this renderer is alone in the UI
+       $('.view-renderer-titlebar-buttonpane-maximize', jqR).css({display: 'none'});
+
+     } else {
+
+       // show any hidden button in the title bar of all renderers
+       $('.view-renderer-titlebar-buttonpane-maximize', self.container).css({display: 'block'});
+     }
+
+     // rearrange layout
+     self.positionRenderers();
+   };
 
   /**
    * Remove a renderer from the renderers box.
@@ -392,34 +391,34 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
    * @param {Object} a renderer object.
    */
   rboxjs.RenderersBox.prototype.removeRenderer = function(rndr) {
-     var id = rndr.id;
+    var id = rndr.id;
 
-     for (var i = 0; i < this.renderers.length; i++) {
+    for (var i = 0; i < this.renderers.length; i++) {
 
-       if (this.renderers[i].id === id) {
+      if (this.renderers[i].id === id) {
 
-         this.renderers.splice(i, 1);
+        this.renderers.splice(i, 1);
 
-         // remove HTML interface and event handlers
-         rndr.destroy();
-         rndr.container.remove();
+        // remove HTML interface and event handlers
+        rndr.destroy();
+        rndr.container.remove();
 
-         // reposition renderers
-         --this.numOfRenderers;
-         this.positionRenderers();
+        // reposition renderers
+        --this.numOfRenderers;
+        this.positionRenderers();
 
-         // hide the maximize/restore button when there is only one renderer
-         if (this.numOfRenderers === 1) {
-           $('.view-renderer-titlebar-buttonpane-maximize', this.container).css({display: 'none'});
-         }
+        // hide the maximize/restore button when there is only one renderer
+        if (this.numOfRenderers === 1) {
+          $('.view-renderer-titlebar-buttonpane-maximize', this.container).css({display: 'none'});
+        }
 
-         // throw rBox's onRendererRemove event
-         this.onRendererRemove(id);
+        // throw rBox's onRendererRemove event
+        this.onRendererRemove(id);
 
-         break;
-       }
-     }
-   };
+        break;
+      }
+    }
+  };
 
   /**
    * Rearrange renderers in the renderers box's UI layout.
@@ -457,24 +456,38 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
   };
 
   /**
-   * Link renderers in the renderers box's.
+   * Link renderers in the renderers box's (select all).
    */
   rboxjs.RenderersBox.prototype.linkRenderers = function() {
 
-    this.renderers.forEach(function(rndr) {
+    this.renderers.forEach( function(rndr) {
 
       if (!rndr.selected) { rndr.select(); }
     });
+  };
 
-    this.renderersLinked = true;
+  /**
+   * Unlink renderers in the renderers box's (deselect all).
+   */
+  rboxjs.RenderersBox.prototype.unlinkRenderers = function() {
+
+    this.renderers.forEach( function(rndr) {
+
+      if (rndr.selected) { rndr.deselect(); }
+    });
   };
 
   /**
    * Unlink renderers in the renderers box's.
+   *
+   * @return {Array} array with the renderers selected in the UI.
    */
-  rboxjs.RenderersBox.prototype.unlinkRenderers = function() {
+  rboxjs.RenderersBox.prototype.getSelectedRenderers = function() {
 
-    this.renderersLinked = false;
+    return this.renderers.filter( function(rndr) {
+
+      return rndr.selected;
+    });
   };
 
   /**
@@ -515,6 +528,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
     this.container.empty();
     this.container = null;
   };
+
 
   return rboxjs;
 });
