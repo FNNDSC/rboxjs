@@ -254,7 +254,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
   rboxjs.RenderersBox.prototype.addRenderer = function(imgFileObj, orientation, callback) {
      var self = this;
 
-     var rArr = self.renderers.filter( function(el) {
+     var rArr = self.renderers.filter(function(el) {
 
        return el.id === imgFileObj.id;
      });
@@ -308,7 +308,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
          // style renderers
          if (targetRndr.maximized) {
 
-           self.renderers.forEach( function(rndr) {
+           self.renderers.forEach(function(rndr) {
 
              if (targetRndr.id !== rndr.id) {
                rndr.container.css({display: 'none'});
@@ -322,12 +322,12 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
        }
 
        // scroll event
-       if (evt.type === 'scroll_3') {
+       if ((evt.type === 'scroll_3') && (self.numOfRenderers > 1) && targetRndr.selected) {
 
          var volProps = targetRndr.getVolProps(targetRndr.orientation);
 
          // change slice in the other selected renderers
-         self.getSelectedRenderers().forEach( function(rndr) {
+         self.getSelectedRenderers().forEach(function(rndr) {
 
            if (targetRndr.id !== rndr.id) {
 
@@ -460,7 +460,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
    */
   rboxjs.RenderersBox.prototype.linkRenderers = function() {
 
-    this.renderers.forEach( function(rndr) {
+    this.renderers.forEach(function(rndr) {
 
       if (!rndr.selected) { rndr.select(); }
     });
@@ -471,7 +471,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
    */
   rboxjs.RenderersBox.prototype.unlinkRenderers = function() {
 
-    this.renderers.forEach( function(rndr) {
+    this.renderers.forEach(function(rndr) {
 
       if (rndr.selected) { rndr.deselect(); }
     });
@@ -484,7 +484,7 @@ define(['utiljs', 'rendererjs', 'jquery_ui'], function(util, renderer) {
    */
   rboxjs.RenderersBox.prototype.getSelectedRenderers = function() {
 
-    return this.renderers.filter( function(rndr) {
+    return this.renderers.filter(function(rndr) {
 
       return rndr.selected;
     });
