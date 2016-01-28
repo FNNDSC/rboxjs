@@ -18,6 +18,9 @@ require.config({
     utiljs: 'utiljs/src/js/utiljs',
     fmjs: 'fmjs/src/js/fmjs',
     xtk: 'rendererjs/src/js/lib/xtk',
+    jpegmin: 'rendererjs/src/js/lib/jpegmin',
+    lossless: 'rendererjs/src/js/lib/lossless',
+    jpx: 'rendererjs/src/js/lib/jpx',
     rendererjs: 'rendererjs/src/js/rendererjs',
     rboxjs: '../rboxjs'
   }
@@ -67,7 +70,7 @@ require(['rboxjs', 'rendererjs', 'fmjs'], function(rbox, renderer, fm) {
     imgFileObj.imgType = renderer.Renderer.imgType(files[0]);
 
     if ((imgFileObj.imgType === 'dicom') || (imgFileObj.imgType === 'dicomzip')) {
-      
+
       imgFileObj.files = files;
 
     } else {
