@@ -1,5 +1,5 @@
 require(['./config'], function() {
-require(['rboxjsPackage', 'rendererjsPackage', 'fmjsPackage'], function(rbox, renderer, fm) {
+require(['jquery', 'rboxjsPackage', 'rendererjsPackage', 'fmjsPackage', 'jquery_ui'], function($, rbox, renderer, fm) {
   // Entry point
 
   // Create a file manager object

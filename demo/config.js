@@ -1,5 +1,5 @@
 require.config({
-  baseUrl: 'js/components',
+  baseUrl: '..',
   paths: {
     jquery: ['https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min', 'jquery/dist/jquery.min'],
     jquery_ui: ['https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min', 'jquery-ui/jquery-ui.min'],
@@ -9,16 +9,16 @@ require.config({
   // bower packages
   {
     name: 'fmjsPackage', // used for mapping...
-    location: '../fmjs/src',   // relative to base url
+    location: '../fmjs/src'   // relative to base url
   },
   {
     name: 'rendererjsPackage', // used for mapping...
-    location: '../rendererjs/src',   // relative to base url
+    location: '../rendererjs/src'   // relative to base url
   },
   // local packages
   {
-    name: 'rboxjs', // used for mapping...
-    location: 'src',   // relative to base url
+    name: 'rboxjsPackage', // used for mapping...
+    location: 'src'   // relative to base url
   }
   ]
 });

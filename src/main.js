@@ -17,7 +17,7 @@ var dependencies = [
  */
 
 // define a new module
-define([dependencies], function(util, renderer) {
+define(dependencies, function(util, renderer) {
 
   /**
    * Provide a namespace for the renderers box module
