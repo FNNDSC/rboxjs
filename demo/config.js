@@ -9,16 +9,19 @@ require.config({
   // bower packages
   {
     name: 'fmjsPackage', // used for mapping...
-    location: '../fmjs/src'   // relative to base url
+    location: '../fmjs/src',   // relative to base url
+    main: 'js/fmjs'
   },
   {
     name: 'rendererjsPackage', // used for mapping...
-    location: '../rendererjs/src'   // relative to base url
+    location: '../rendererjs/src',   // relative to base url
+    main: 'js/rendererjs'
   },
   // local packages
   {
     name: 'rboxjsPackage', // used for mapping...
-    location: 'src'   // relative to base url
+    location: 'src',   // relative to base url
+    main: 'js/rboxjs'
   }
   ]
 });

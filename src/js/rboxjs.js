@@ -1,14 +1,14 @@
 var dependencies = [
 /**
 //
-// NEEDS JQUERY AND JQUERY UI 
+// NEEDS JQUERY AND JQUERY UI
 /// LOADED @ APP LEVEL
 //
 */
 
 // bower
-'../../utiljs/src/js/utiljs',
-'../../rendererjs/src/main'
+'../../../utiljs/src/js/utiljs',
+'../../../rendererjs/src/js/rendererjs'
 
 ];
 
