@@ -1,23 +1,14 @@
-var dependencies = [
-/**
-//
-// NEEDS JQUERY AND JQUERY UI
-/// LOADED @ APP LEVEL
-//
-*/
-
-// bower
-'../../../utiljs/src/js/utiljs',
-'../../../rendererjs/src/js/rendererjs'
-
-];
-
 /**
  * This module implements a renderers' container box
  */
 
 // define a new module
-define(dependencies, function(util, renderer) {
+define(
+  [
+  // bower
+  '../../../utiljs/src/js/utiljs',
+  '../../../rendererjs/src/js/rendererjs'
+  ], function(util, renderer) {
 
   /**
    * Provide a namespace for the renderers box module
