@@ -3,7 +3,7 @@
  *
  */
 
-define(['rboxjsPackage', 'jquery', 'jquery_ui'], function(rboxjs, $) {
+define(['rboxjsPackage'], function(rboxjs) {
 
   describe('rboxjs', function() {
     var rBox;
