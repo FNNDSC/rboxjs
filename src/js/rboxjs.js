@@ -5,9 +5,13 @@
 // define a new module
 define(
   [
-  // bower
+  // bower components
   '../../../utiljs/src/js/utiljs',
-  '../../../rendererjs/src/js/rendererjs'
+  '../../../rendererjs/src/js/rendererjs',
+
+  // jquery is special because it is AMD but doesn't return an object
+  'jquery_ui'
+
   ], function(util, renderer) {
 
     /**
