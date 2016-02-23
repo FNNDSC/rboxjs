@@ -3,7 +3,7 @@
  *
  */
 
-define(['rboxjsPackage'], function(rboxjs) {
+define(['rboxjs'], function(rboxjs) {
 
   describe('rboxjs', function() {
     var rBox;
