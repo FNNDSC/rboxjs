@@ -28,7 +28,6 @@ define(
      * @param {Object} renderers box's options with properties:
      *   -container: renderers box's container's DOM id or DOM object
      *   -position: renderers box's css position object with possible properties top, bottom, left, right
-     *   -renderersIdPrefix: a prefix string for the DOM ids used for the XTK renderer's containers
      * @param {Object} optional file manager object to enable reading of files from the cloud or HTML5
      * sandboxed filesystem.
      */
@@ -54,9 +53,6 @@ define(
       } else {
         this.position = {};
       }
-
-      // prefix string for the DOM ids that are going to be used for the XTK renderer's containers
-      this.renderersIdPrefix = options.renderersIdPrefix;
 
       // list of currently rendered renderer objects
       this.renderers = [];
@@ -291,7 +287,6 @@ define(
       // renderer options object
       var options = {
         container: jqR[0],
-        rendererId: self.getRendererContId(imgFileObj.id), // for the internal XTK renderer container
         orientation: orientation
       };
 
@@ -500,27 +495,21 @@ define(
     };
 
     /**
-     * Return a renderer's internal XTK renderer's container DOM id.
+     * Return a renderer object or null.
      *
      * @param {Number} renderer's integer id.
-     * @return {String} the renderer's container DOM id.
+     * @return {Object} the renderer object or null.
      */
-    rboxjs.RenderersBox.prototype.getRendererContId = function(id) {
+    rboxjs.RenderersBox.prototype.getRenderer = function(id) {
 
-      // the internal XTK renderer's container DOM id is related to the renderer's integer id
-      return this.renderersIdPrefix + id;
-    };
+      var rArr = this.renderers.filter(function(rndr) {
 
-    /**
-     * Returns a renderer's integer id.
-     *
-     * @param {String} the renderer's internal XTK renderer's container DOM id.
-     * @return {Number} the renderer's integer id.
-     */
-    rboxjs.RenderersBox.prototype.getRendererId = function(rendererContId) {
+        return rndr.id === id;
+      });
 
-      // the renderer's integer id is related to the internal XTK renderer's container DOM id
-      return parseInt(rendererContId.replace(this.renderersIdPrefix, ''));
+      if (rArr.length) { return rArr[0]; }
+
+      return null;
     };
 
     /**

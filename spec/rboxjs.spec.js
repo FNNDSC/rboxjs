@@ -19,20 +19,20 @@ define(['rboxjs'], function(rboxjs) {
       files: [{url: testDataDir + 'volumes/nii/s34654_df.nii', name: 's34654_df.nii', remote: true}]
     };
 
+    // append a container for the renderers box
+    var container = $('<div></div>');
+    $(document.body).append(container);
+
     var rBox;
 
     // renderers box options object
     var options = {
-      container: 'rboxcontainer',
+      container: container,
       position: {
         top: '50px',
         left: '10px'
-      },
-      renderersIdPrefix: 'renderer'
+      }
     };
-
-    // Append container div
-    $(document.body).append('<div id="rboxcontainer"></div>');
 
     describe('rboxjs initialization', function() {
 
@@ -45,14 +45,6 @@ define(['rboxjs'], function(rboxjs) {
 
         rBox.destroy();
       });
-
-      it('rboxjs.RenderersBox\'s container id is rboxcontainer',
-
-        function() {
-
-          expect(rBox.container.attr('id')).toEqual('rboxcontainer');
-        }
-      );
 
       it('rboxjs.RenderersBox container has class ui-sortable',
 
@@ -81,6 +73,7 @@ define(['rboxjs'], function(rboxjs) {
 
         rBox = new rboxjs.RenderersBox(options);
         rBox.init();
+        rBox.onRendererRemove = function() {}; // overwritten to do nothing
       });
 
       afterEach(function() {
@@ -97,18 +90,6 @@ define(['rboxjs'], function(rboxjs) {
             expect(rBox.container.find('.view-renderer').length).toEqual(1);
             expect(rBox.numOfRenderers).toEqual(1);
             expect(rBox.renderers[0].volume.filedata.byteLength).toBeGreaterThan(0);
-            done();
-          });
-        }
-      );
-
-      it('rboxjs.addRenderer adds an internal XTK renderer with id renderer0',
-
-        function(done) {
-
-          rBox.addRenderer(imgFileObj, 'Z', function() {
-
-            expect(rBox.container.find('#renderer0').length).toEqual(1);
             done();
           });
         }

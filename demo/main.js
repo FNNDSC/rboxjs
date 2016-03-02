@@ -15,8 +15,7 @@ require(['./config'], function() {
         left: '10px',
         right: '5px',
         bottom: '5px'
-      },
-      renderersIdPrefix: 'renderer'
+      }
     };
 
     // Create a renderers box. The second parameter (a file manager) is optional and only required
