@@ -110,7 +110,30 @@ define(['rboxjs'], function(rboxjs) {
           });
         }
       );
-    });
 
+      it('rboxjs.getRendererId returns a renderer\'s integer id when passed a renderer obj',
+
+        function(done) {
+
+          rBox.addRenderer(imgFileObj, 'Z', function(rndr) {
+
+            expect(rBox.getRendererId(rndr)).toEqual(0);
+            done();
+          });
+        }
+      );
+
+      it('rboxjs.getRendererId returns a renderer\'s integer id when passed a DOM obj',
+
+        function(done) {
+
+          rBox.addRenderer(imgFileObj, 'Z', function(rndr) {
+
+            expect(rBox.getRendererId(rndr.container[0])).toEqual(0);
+            done();
+          });
+        }
+      );
+    });
   });
 });

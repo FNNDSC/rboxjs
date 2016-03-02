@@ -513,6 +513,36 @@ define(
     };
 
     /**
+     * Return a renderer's integer id.
+     *
+     * @param {Object} renderer object or DOM object for the renderer's container.
+     * @return {Number} renderer's integer id or -1 if not found.
+     */
+    rboxjs.RenderersBox.prototype.getRendererId = function(obj) {
+
+      var id = -1;
+
+      if (obj.renderer) { // a renderer object was passed
+
+        if ((typeof obj.id === 'number') && this.getRenderer(obj.id)) {
+
+          id = obj.id;
+        }
+
+      } else { // a DOM object was passed
+
+        var rArr = this.renderers.filter(function(rndr) {
+
+          return rndr.container[0] === obj;
+        });
+
+        if (rArr.length) { id = rArr[0].id; }
+      }
+
+      return id;
+    };
+
+    /**
      * Destroy all objects and remove html interface
      */
     rboxjs.RenderersBox.prototype.destroy = function() {
